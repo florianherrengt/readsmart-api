@@ -5,12 +5,12 @@ import * as cors from 'cors';
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/', (request, response) => {
-  response.json({ok: 1});
+  response.json({ ok: 1 });
 });
 
-export {app};
+export { app };
 
