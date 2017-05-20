@@ -1,6 +1,7 @@
 import { IConfig } from '../src/common/interfaces/Config'
 import { development } from './development';
 import { production } from './production'
+import { test } from './test'
 
 const env = process.env.NODE_ENV || 'development'
 
@@ -8,6 +9,7 @@ console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 
 const allEnvs = {
   development,
+  test,
   production
 }
 

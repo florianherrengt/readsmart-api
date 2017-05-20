@@ -1,0 +1,8 @@
+machine:
+  services:
+    - redis
+    - rabbitmq-server
+
+dependencies:
+  override:
+    - npm i

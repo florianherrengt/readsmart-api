@@ -1,0 +1,3 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.schema = ["\n    type PostResponse {\n        # Number of total posts to be displayed. If count > posts.lengh other posts are in the queue to be fetched\n        count: Int\n\n        # The actual posts\n        posts: [Post]\n    }\n    type Post {\n        # The title extracted from the post\n        title: String\n\n        # Raw version text only of the post with line return\n        text: String\n\n        # Main image from the post\n        image: String\n\n        # When the post was inserted in the DB\n        created_at: String\n    }\n    type Query {\n        redditPosts(sub: String!): PostResponse\n    }\n    schema {\n        query: Query\n    }\n"];
