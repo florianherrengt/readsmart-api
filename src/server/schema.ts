@@ -1,24 +1,12 @@
+import { merge } from 'lodash';
 import { makeExecutableSchema } from 'graphql-tools';
 
-const schema = [`
-    type Query {
-        testString: String
-    }
-    schema {
-        query: Query
-    }
-`]
+import { schema as postsSchema, resolvers as postsResolvers } from './api/posts'
 
-const resolvers = {
-    Query: {
-        testString(root, { sourceType }, context) {
-            return `Those are posts for ${sourceType}`
-        }
-    }
-}
+const resolvers = merge(postsResolvers, {})
 
 const executableSchema = makeExecutableSchema({
-    typeDefs: [...schema],
+    typeDefs: [...postsSchema],
     resolvers,
 });
 

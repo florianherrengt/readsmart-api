@@ -1,6 +1,5 @@
 import * as agent from 'superagent'
 import * as rabbit from '../common/rabbit'
-import { LinkFetcher } from '../common/LinkFetcher';
 import * as http from 'http'
 import { app } from './server';
 import * as socketIO from '../common/io'
@@ -11,7 +10,7 @@ socketIO.init(server)
 
 Promise.all([
     rabbit.init(),
-    new Promise((resolve, reject) => server.listen(3000, '0.0.0.0', () => resolve()))
+    new Promise((resolve, reject) => server.listen(3000, '0.0.0.0', (error) => error ? reject(error) : resolve()))
 ]).then(() => {
     console.log(new Date())
     console.log('rabbitmq is ready');

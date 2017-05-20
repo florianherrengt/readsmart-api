@@ -9,7 +9,11 @@ export class LinkFetcher {
     constructor(
         public agent: agent.SuperAgent<agent.Request>,
         public ch: Channel
-    ) { }
+    ) {
+        setTimeout(() => {
+            console.log(this.ch)
+        }, 2000)
+    }
     async getExistingPosts(type: string): Promise<IPost[]> {
         const results: IQueryResultPosts = await pgPool.query('SELECT * FROM posts WHERE type = $1', ['reddit']);
         return results.rows
