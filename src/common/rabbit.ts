@@ -14,7 +14,8 @@ const init = async () => {
     try {
         conn = await connect(config.rabbit)
         ch = await conn.createChannel()
-        await Promise.all(Object.keys(queues).map(queue => ch.assertQueue[queue]))
+        await ch.assertQueue(queues.POPULATE_POSTS)
+        await ch.assertQueue(queues.NEW_POSTS)
         console.log('All queues created')
     } catch (error) {
         console.error('Cannot init RabbitMQ', error)
