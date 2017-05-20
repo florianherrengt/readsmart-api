@@ -38,6 +38,7 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var rabbit = require("../common/rabbit");
 var http = require("http");
+var config_1 = require("../../config");
 var server_1 = require("./server");
 var socketIO = require("../common/io");
 (function () { return __awaiter(_this, void 0, void 0, function () {
@@ -50,12 +51,12 @@ var socketIO = require("../common/io");
                 app = new server_1.App(rabbit.ch);
                 server = http.createServer(app.create());
                 socketIO.init(server);
-                return [4 /*yield*/, new Promise(function (resolve, reject) { return server.listen(3000, '0.0.0.0', function (error) { return error ? reject(error) : resolve(); }); })];
+                return [4 /*yield*/, new Promise(function (resolve, reject) { return server.listen(config_1.default.app.port, '0.0.0.0', function (error) { return error ? reject(error) : resolve(); }); })];
             case 2:
                 _a.sent();
                 console.log(new Date());
                 console.log('rabbitmq is ready');
-                console.log('server listing on port 3000');
+                console.log('server listing on port ' + config_1.default.app.port);
                 rabbit.ch.consume(rabbit.queues.NEW_POSTS, function (msg) {
                     var newSourcesMsg = JSON.parse(msg.content.toString());
                     socketIO.io.emit(rabbit.queues.NEW_POSTS + newSourcesMsg.type);

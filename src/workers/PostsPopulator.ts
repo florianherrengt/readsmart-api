@@ -11,8 +11,7 @@ export class PostsPopulator {
         public pgPool: Pool,
         public ch: Channel,
         public agent: agent.SuperAgent<agent.Request>
-    ) {
-    }
+    ) { }
     async start() {
         console.log(`Consume ${queues.POPULATE_POSTS}`)
         await this.ch.assertQueue(queues.POPULATE_POSTS)

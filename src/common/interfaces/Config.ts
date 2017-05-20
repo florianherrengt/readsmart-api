@@ -1,4 +1,7 @@
 export interface IConfig {
     postgres: string,
-    rabbit: string
+    rabbit: string,
+    app: {
+        port: number
+    }
 }

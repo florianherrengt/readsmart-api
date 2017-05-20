@@ -56,23 +56,26 @@ var init = function () { return __awaiter(_this, void 0, void 0, function () {
                 }
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 5, , 6]);
+                _a.trys.push([1, 6, , 7]);
                 return [4 /*yield*/, amqplib_1.connect(config_1.default.rabbit)];
             case 2:
                 exports.conn = conn = _a.sent();
                 return [4 /*yield*/, conn.createChannel()];
             case 3:
                 exports.ch = ch = _a.sent();
-                return [4 /*yield*/, Promise.all(Object.keys(exports.queues).map(function (queue) { return ch.assertQueue[queue]; }))];
+                return [4 /*yield*/, ch.assertQueue(exports.queues.POPULATE_POSTS)];
             case 4:
                 _a.sent();
-                console.log('All queues created');
-                return [3 /*break*/, 6];
+                return [4 /*yield*/, ch.assertQueue(exports.queues.NEW_POSTS)];
             case 5:
+                _a.sent();
+                console.log('All queues created');
+                return [3 /*break*/, 7];
+            case 6:
                 error_1 = _a.sent();
                 console.error('Cannot init RabbitMQ', error_1);
                 throw new Error(error_1);
-            case 6: return [2 /*return*/];
+            case 7: return [2 /*return*/];
         }
     });
 }); };
