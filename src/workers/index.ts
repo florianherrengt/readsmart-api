@@ -1,5 +1,5 @@
 import { init, ch } from '../common/rabbit'
-import * as pgPool from '../common/pgPool'
+import { pgPool } from '../common/pgPool'
 import * as agent from 'superagent'
 import { Channel } from 'amqplib'
 
@@ -11,10 +11,20 @@ const workers = {
 
 export async function start(workerName: string) {
     try {
+        console.log('Rabbit... starting')
         await init()
-        const worker = new workers[workerName](pgPool, ch, agent)
-        console.log(workerName, 'started')
+        console.log('Rabbit... done')
+        console.log(`${workerName}... starting`)
+        const worker = new PostsPopulator(pgPool, ch, agent)
+        await worker.start()
+        console.log(`${workerName}... done`)
     } catch (error) {
         console.error(error)
     }
 }
+
+const workerName = process.argv[process.argv.length - 1]
+if (!workers[workerName]) {
+    throw new Error(`No worker found for ${workerName}. Available: ${Object.keys(workers)}`)
+}
+start(workerName)

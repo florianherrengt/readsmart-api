@@ -17,19 +17,25 @@ describe('The PostPopulator', () => {
     afterAll(async () => {
         await pgPool.end()
     })
-    it('should consume and process on start', () => {
+    it('should consume and process on start', async () => {
         const consume = jest.fn()
+        const assertQueue = jest.fn()
 
         const agent = new MockAgent()
-        const customMockChannel = new MockChannel([{ name: 'consume', fn: consume }])
+        const customMockChannel = new MockChannel([
+            { name: 'consume', fn: consume },
+            { name: 'assertQueue', fn: assertQueue }
+        ])
 
         const postPopulator = new PostsPopulator(
             pgPool,
             customMockChannel,
             agent
         )
+        await postPopulator.start()
         expect(consume).toHaveBeenCalledTimes(1)
-        expect(consume).toHaveBeenCalledWith(queues.POPULATE_POSTS, postPopulator.process)
+        const [[queueName]] = consume.mock.calls
+        expect(queueName).toEqual(queues.POPULATE_POSTS)
     })
     it('should return if invalid message', async () => {
         const consume = jest.fn()

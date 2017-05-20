@@ -4,7 +4,10 @@ export const resolvers = {
     Query: {
         async redditPosts(root, { sub }, context: IContext) {
             const results = await context.postsRepository.getByReddit(sub)
-            return results.existingsPosts
+            return {
+                count: results.postsToInsert.length + results.existingsPosts.length,
+                posts: results.existingsPosts
+            }
         }
     }
 }

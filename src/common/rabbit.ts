@@ -1,3 +1,4 @@
+import config from '../../config'
 import { connect, Channel, Connection } from 'amqplib'
 
 let conn: Connection;
@@ -11,11 +12,10 @@ export const queues = {
 const init = async () => {
     if (conn) { return Promise.resolve() }
     try {
-        conn = await connect('amqp://localhost')
+        conn = await connect(config.rabbit)
         ch = await conn.createChannel()
-        Object.keys(queues).forEach(async queue => {
-            await ch.assertQueue[queue]
-        })
+        await Promise.all(Object.keys(queues).map(queue => ch.assertQueue[queue]))
+        console.log('All queues created')
     } catch (error) {
         console.error('Cannot init RabbitMQ', error)
         throw new Error(error)

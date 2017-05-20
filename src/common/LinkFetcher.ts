@@ -10,12 +10,9 @@ export class LinkFetcher {
         public agent: agent.SuperAgent<agent.Request>,
         public ch: Channel
     ) {
-        setTimeout(() => {
-            console.log(this.ch)
-        }, 2000)
     }
     async getExistingPosts(type: string): Promise<IPost[]> {
-        const results: IQueryResultPosts = await pgPool.query('SELECT * FROM posts WHERE type = $1', ['reddit']);
+        const results: IQueryResultPosts = await pgPool.query('SELECT * FROM posts WHERE type = $1', [type]);
         return results.rows
     }
     async handler({ type, posts }: { type: string, posts: any }): Promise<{ existingsPosts: IPost[], postsToInsert: IPost[] }> {

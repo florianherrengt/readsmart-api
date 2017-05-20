@@ -12,10 +12,14 @@ export class PostsPopulator {
         public ch: Channel,
         public agent: agent.SuperAgent<agent.Request>
     ) {
-        this.process.bind(this)
-        this.ch.consume(queues.POPULATE_POSTS, this.process)
+    }
+    async start() {
+        console.log(`Consume ${queues.POPULATE_POSTS}`)
+        await this.ch.assertQueue(queues.POPULATE_POSTS)
+        await this.ch.consume(queues.POPULATE_POSTS, (msg) => this.process(msg))
     }
     async process(msg) {
+        console.log(`Consuming ${queues.POPULATE_POSTS}`, new Date())
         try {
             if (msg) {
                 const { type, posts }: { type: string, posts: [IPost] } = JSON.parse(msg.content.toString())

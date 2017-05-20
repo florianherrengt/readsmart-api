@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "ts:watch": "tsc -w src/**/*.ts -t es5 --lib ES2015 --outDir dist",
-    "dev": "nodemon dist/server/index.js",
+    "dev": "nodemon dist/src/server/index.js",
     "rabbitmq": "docker run -d -p 5672:5672 rabbitmq",
     "postgres": "docker run -d -p 5432:5432 postgres",
     "test": "jest src/**/*.test.ts"

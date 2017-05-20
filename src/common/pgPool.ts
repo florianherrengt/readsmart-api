@@ -1,9 +1,9 @@
+import config from '../../config'
 import { Pool, Query, QueryResult } from 'pg';
 import { parse as parsePgConnectionString } from 'pg-connection-string';
 
-
 const pgPool = new Pool(
-  Object.assign({}, parsePgConnectionString('postgres://postgres@localhost:5432/postgres'), {
+  Object.assign({}, parsePgConnectionString(config.postgres), {
     max: 10,
     idleTimeoutMillis: 500,
   }),
