@@ -9,7 +9,7 @@
     "rabbitmq": "docker run -d -p 5672:5672 rabbitmq",
     "postgres": "docker run -d -p 5432:5432 postgres",
     "test": "jest src/**/*.test.ts",
-    "start": "pm2 start dist/src/server/index.js"
+    "start": "node dist/src/server/index.js"
   },
   "keywords": [],
   "author": "Florian Herrengt <florian.herrengt@gmail.com>",
