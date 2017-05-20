@@ -1,8 +1,9 @@
-import { init, ch } from '../common/rabbit'
+import { init, ch, queues } from '../common/rabbit'
 import { Pool } from 'pg';
 import * as agent from 'superagent'
 import { Channel } from 'amqplib'
 import { IPost } from '../common/interfaces/Post'
+import { INewPostsMsg } from '../common/interfaces/NewPostsMsg'
 import { INewspaperResponse } from '../common/interfaces/NewspaperResponse'
 
 export class PostsPopulator {
@@ -11,9 +12,10 @@ export class PostsPopulator {
         public ch: Channel,
         public agent: agent.SuperAgent<agent.Request>
     ) {
-        this.ch.consume('populate-posts', this.process)
+        this.process.bind(this)
+        this.ch.consume(queues.POPULATE_POSTS, this.process)
     }
-    process = async (msg) => {
+    async process(msg) {
         try {
             if (msg) {
                 const { type, posts }: { type: string, posts: [IPost] } = JSON.parse(msg.content.toString())
@@ -24,12 +26,14 @@ export class PostsPopulator {
                         this.agent.get(`https://dj96a3dxm6.execute-api.us-east-1.amazonaws.com/prod?url=${post.url}`).then(response => {
                             const { text, top_image }: INewspaperResponse = response.body;
                             return this.pgPool.query(
-                                `INSERT INTO posts (title, url, type, image, text) VALUES ($1, $2, $3, $4, $5)`,
-                                [post.title, post.url, type, top_image, encodeURIComponent(text)]
+                                `INSERT INTO posts (title, url, type, image, text, created_at) VALUES ($1, $2, $3, $4, $5, $6)`,
+                                [post.title, post.url, type, top_image, encodeURIComponent(text), new Date()]
                             )
                         })
                     )
                 )
+                const newPostsMsg: INewPostsMsg = { type }
+                this.ch.sendToQueue(queues.NEW_POSTS, new Buffer(JSON.stringify({ type })))
                 this.ch.ack(msg)
                 console.log('completed')
             }

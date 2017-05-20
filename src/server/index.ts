@@ -1,18 +1,25 @@
 import * as agent from 'superagent'
 import * as rabbit from '../common/rabbit'
 import { LinkFetcher } from '../common/LinkFetcher';
+import * as http from 'http'
 import { app } from './server';
+import * as socketIO from '../common/io'
+import { INewPostsMsg } from '../common/interfaces/NewPostsMsg'
+
+const server = http.createServer(app)
+socketIO.init(server)
 
 Promise.all([
     rabbit.init(),
-    app.listen(3000)
+    new Promise((resolve, reject) => server.listen(3000, '0.0.0.0', () => resolve()))
 ]).then(() => {
+    console.log(new Date())
     console.log('rabbitmq is ready');
     console.log('server listing on port 3000')
-    const linkFetcher = new LinkFetcher(agent, rabbit.ch);
-    return linkFetcher.getReddit('javascript').then(posts => {
-        console.log(posts)
-    });
+    rabbit.ch.consume(rabbit.queues.NEW_POSTS, msg => {
+        const newSourcesMsg: INewPostsMsg = JSON.parse(msg.content.toString())
+        socketIO.io.emit(rabbit.queues.NEW_POSTS + newSourcesMsg.type)
+    })
 }).catch(error => {
     console.log(error)
 })

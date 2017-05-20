@@ -8,7 +8,7 @@
     "dev": "nodemon dist/server/index.js",
     "rabbitmq": "docker run -d -p 5672:5672 rabbitmq",
     "postgres": "docker run -d -p 5432:5432 postgres",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest src/**/*.test.ts"
   },
   "keywords": [],
   "author": "Florian Herrengt <florian.herrengt@gmail.com>",
@@ -29,7 +29,6 @@
     "@types/body-parser": "^1.16.3",
     "@types/cors": "^2.8.1",
     "@types/express": "^4.0.35",
-    "@types/jasmine": "^2.5.47",
     "@types/jest": "^19.2.3",
     "@types/lodash": "^4.14.64",
     "@types/pg": "^6.1.40",
@@ -40,6 +39,9 @@
     "body-parser": "^1.17.1",
     "cors": "^2.8.3",
     "express": "^4.15.2",
+    "graphql": "^0.9.6",
+    "graphql-server-express": "^0.7.2",
+    "graphql-tools": "^0.11.0",
     "lodash": "^4.17.4",
     "pg": "^6.1.5",
     "pg-connection-string": "^0.1.3",

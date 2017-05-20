@@ -5,5 +5,6 @@ CREATE TABLE "public"."posts" (
     "text" text,
     "url" text,
     "image" text,
+    "created_at" Date,
     PRIMARY KEY ("id")
 );

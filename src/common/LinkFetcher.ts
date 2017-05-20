@@ -2,6 +2,7 @@ import * as agent from 'superagent'
 import { flatten } from 'lodash'
 import * as pgPool from '../common/pgPool'
 import { Channel } from 'amqplib'
+import { queues } from '../common/rabbit'
 import { IPost, IQueryResultPosts } from '../common/interfaces/Post'
 
 export class LinkFetcher {
@@ -17,7 +18,7 @@ export class LinkFetcher {
         const existingsPosts = await this.getExistingPosts(type)
         const existingsPostsUrl = existingsPosts.map(({ url }) => url)
         const postsToInsert = posts.filter(post => !~existingsPostsUrl.indexOf(post.url))
-        this.ch.sendToQueue('populate-posts', new Buffer(JSON.stringify({
+        this.ch.sendToQueue(queues.POPULATE_POSTS, new Buffer(JSON.stringify({
             type,
             posts: postsToInsert
         })))
